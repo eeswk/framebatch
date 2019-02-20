@@ -1,0 +1,45 @@
+spring:
+  profiles:
+    active: local
+
+spring.batch.job.names: ${job.name:NONE}
+
+logging:
+  level:
+    org:
+      springframework:
+        batch: DEBUG
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
+---
+spring:
+  profiles: local
+  datasource:
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    url: jdbc:h2:tcp://localhost/~/test
+
+---
+spring:
+  profiles: mysql
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: jpa_user
+    password: jpa_user
+    url: jdbc:mysql://localhost:3306/spring_batch?userSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_commnets: true
+        format_sql: true
+
