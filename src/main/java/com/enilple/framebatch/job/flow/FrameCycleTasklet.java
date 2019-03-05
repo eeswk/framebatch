@@ -1,7 +1,6 @@
 package com.enilple.framebatch.job.flow;
 
 import com.enilple.framebatch.model.FrameCycleStats;
-import com.enilple.framebatch.model.FrameCycleStatsRank;
 import com.enilple.framebatch.repository.FrameCycleStatsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.StepContribution;
@@ -12,13 +11,9 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Component
@@ -33,9 +28,11 @@ public class FrameCycleTasklet implements Tasklet {
     public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
         log.info("FrameCycleTasklet");
 
+        List<FrameCycleStats> frameCycleGroupList = repository.findAllbyGroupBy();
 
+        log.info("frameCycleGroupList size = {}", frameCycleGroupList.size());
 
-
+        chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put("frameCycleGroupList", frameCycleGroupList);
 
         return RepeatStatus.FINISHED;
     }
